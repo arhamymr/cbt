@@ -1,0 +1,51 @@
+var data=$("form").serialize();
+				$.ajax({
+					url:"proses.php",
+					type:"POST",
+					data:data,
+					success:function(response){
+						noSoal=response;
+						//Cek teta disini
+						var nisn=$("input[name='nisn']").val();
+						$.ajax({
+							url:"cekTeta.php",
+							type:"POST",
+							data:"nisn="+nisn,
+							success:function(response){
+								if(response==1)
+								{
+									document.location.href="hasil.php?nisn="+nisn;
+								}
+								else
+								{
+									//Cek jumlah soal maksimal disini
+									var nisn=$("input[name='nisn']").val();
+									$.ajax({
+										url:"cekSoalMaximal.php",
+										type:"POST",
+										data:"nisn="+nisn,
+										success:function(response){
+											if(response==1)
+											{
+												document.location.href="hasil.php?nisn="+nisn;
+											}
+											else
+											{
+												no=$("input[name='no']").val();
+												
+												$.ajax({
+													url:"tampilSoalBerikutnya.php",
+													type:"POST",
+													data:"no="+no+"&noSoal="+noSoal,
+													success:function(response){
+														$("#daftarSoal").html(response);
+													}
+												});
+											}
+										}
+									});
+								}
+							}
+						});	
+					}
+				});	
